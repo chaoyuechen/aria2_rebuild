@@ -24,9 +24,8 @@ jobs:
       
       - name: Update apt-get
         run: |
-            apt-get update && \
-            DEBIAN_FRONTEND="noninteractive" \
-            apt-get install -y --no-install-recommends \
+            sudo apt-get update && \
+            sudo apt-get install -y --no-install-recommends \
                 make binutils autoconf automake autotools-dev libtool \
                 patch ca-certificates \
                 pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 \
@@ -42,7 +41,7 @@ jobs:
             curl -L -O https://www.libssh2.org/download/libssh2-1.9.0.tar.gz && \
             curl -L -O https://github.com/libssh2/libssh2/commit/ba149e804ef653cc05ed9803dfc94519ce9328f7.patch
             
-      - name: Download
+      - name: Install gmp
         run: |
             tar xf gmp-6.2.1.tar.lz && \
             cd gmp-6.2.1 && \
