@@ -122,13 +122,13 @@ jobs:
 
       - name: Build
         run: |
-            echo $pwd && curl -L -o version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
-            git clone https://github.com/aria2/aria2 && \
-                cp -rf aria2_rebuild/src aria2/src  && \
-                cd aria2 && autoreconf -i && ./mingw-config && sudo make && \
-                ${{ env.HOST }}-strip src/aria2c.exe
+            curl -L -o version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
+            git clone https://github.com/aria2/aria2
+            cp -rf src/* aria2/src
+            cd aria2 && autoreconf -i && ./mingw-config && sudo make
+            ${{ env.HOST }}-strip src/aria2c.exe
             
       - name: Archive file
         uses: actions/upload-artifact@v3
         with:
-          path: aria2/aria2/src/aria2c.exe
+          path: aria2/src/aria2c.exe
