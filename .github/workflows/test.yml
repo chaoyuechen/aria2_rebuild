@@ -22,11 +22,10 @@ jobs:
             curl -L -o version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
             echo $(pwd) >> version.json
             git clone https://github.com/aria2/aria2
-            cp -rf src aria2/src
+            cp -rf src/* aria2/src
             
       - name: Archive file
         uses: actions/upload-artifact@v3
         with:
           path: |
-            version.json
             aria2/src/OptionHandlerFactory.cc
