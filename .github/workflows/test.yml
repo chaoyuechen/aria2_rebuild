@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+
+  workflow_dispatch:
+
+env:
+  HOST: x86_64-w64-mingw32
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+            echo $(pwd)
+            curl -L -o version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
+            git clone https://github.com/aria2/aria2
+            cp -rf aria2_rebuild/src aria2/src
