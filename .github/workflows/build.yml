@@ -22,7 +22,7 @@ jobs:
         with:
           repository: ${{ github.repository }}
       
-      - name: Build
+      - name: Update apt-get
         run: |
             apt-get update && \
             DEBIAN_FRONTEND="noninteractive" \
@@ -31,6 +31,9 @@ jobs:
                 patch ca-certificates \
                 pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 \
                 autopoint libcppunit-dev libxml2-dev libgcrypt20-dev lzip
+                
+      - name: Download
+        run: |
             curl -L -O https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz && \
             curl -L -O https://github.com/libexpat/libexpat/releases/download/R_2_4_1/expat-2.4.1.tar.bz2 && \
             curl -L -O https://www.sqlite.org/2021/sqlite-autoconf-3360000.tar.gz && \
@@ -38,6 +41,9 @@ jobs:
             curl -L -O https://c-ares.haxx.se/download/c-ares-1.17.2.tar.gz && \
             curl -L -O https://www.libssh2.org/download/libssh2-1.9.0.tar.gz && \
             curl -L -O https://github.com/libssh2/libssh2/commit/ba149e804ef653cc05ed9803dfc94519ce9328f7.patch
+            
+      - name: Download
+        run: |
             tar xf gmp-6.2.1.tar.lz && \
             cd gmp-6.2.1 && \
             ./configure \
@@ -49,6 +55,9 @@ jobs:
                 --enable-fat \
                 CFLAGS="-mtune=generic -O2 -g0" && \
             make install
+
+      - name: Install expat
+        run: |
             tar xf expat-2.4.1.tar.bz2 && \
             cd ../expat-2.4.1 && \
             ./configure \
@@ -58,6 +67,9 @@ jobs:
                 --host=${{ env.HOST }} \
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
             make install
+            
+      - name: Install sqlite-autoconf
+        run: |
             RUN tar xf sqlite-autoconf-3360000.tar.gz && \
             cd ../sqlite-autoconf-3360000 && \
             ./configure \
@@ -67,6 +79,9 @@ jobs:
                 --host=${{ env.HOST }} \
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
             make install
+
+      - name: Install zlib
+        run: |
             tar xf zlib-1.2.11.tar.gz && \
             cd ../zlib-1.2.11 && \
             CC=${{ env.HOST }}-gcc \
@@ -80,6 +95,9 @@ jobs:
                 --includedir=/usr/local/${{ env.HOST }}/include \
                 --static && \
             make install
+
+      - name: Install c-ares
+        run: |
             tar xf c-ares-1.17.2.tar.gz && \
             cd ../c-ares-1.17.2 && \
             ./configure \
@@ -91,6 +109,9 @@ jobs:
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
                 LIBS="-lws2_32" && \
             make install
+
+      - name: Install libssh2
+        run: |
             tar xf libssh2-1.9.0.tar.gz && \
             cd ../libssh2-1.9.0 && \
             patch -p1 < ../ba149e804ef653cc05ed9803dfc94519ce9328f7.patch && \
@@ -104,13 +125,16 @@ jobs:
                 --with-wincng \
                 LIBS="-lws2_32" && \
             make install
+
+      - name: Build
+        run: |
             cd .. && echo $pwd && curl -L -o ./version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
             git clone https://github.com/aria2/aria2 && \
                 cp -rf aria2_rebuild/src aria2/src  && \
                 cd aria2 && autoreconf -i && ./mingw-config && make && \
                 ${{ env.HOST }}-strip src/aria2c.exe
             
-      - name: Archive pac file
+      - name: Archive file
         uses: actions/upload-artifact@v3
         with:
           path: aria2/aria2/src/aria2c.exe
