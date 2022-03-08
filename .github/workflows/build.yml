@@ -15,9 +15,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -107,9 +104,10 @@ jobs:
                 --with-wincng \
                 LIBS="-lws2_32" && \
             make install
-            cd .. && curl -L -o ./version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
+            cd .. && echo $pwd && curl -L -o ./version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
             git clone https://github.com/aria2/aria2 && \
-                cp -rf src aria2/src  && \
+                git clone https://github.com/chaoyuechen/aria2_rebuild && \
+                cp -rf aria2_rebuild/src aria2/src  && \
                 cd aria2 && autoreconf -i && ./mingw-config && make && \
                 ${{ env.HOST }}-strip src/aria2c.exe
             
