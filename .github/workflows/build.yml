@@ -69,7 +69,7 @@ jobs:
             
       - name: Install sqlite-autoconf
         run: |
-            RUN tar xf sqlite-autoconf-3360000.tar.gz && \
+            tar xf sqlite-autoconf-3360000.tar.gz && \
             cd sqlite-autoconf-3360000 && \
             ./configure \
                 --disable-shared \
