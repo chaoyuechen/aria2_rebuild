@@ -53,7 +53,7 @@ jobs:
                 --disable-cxx \
                 --enable-fat \
                 CFLAGS="-mtune=generic -O2 -g0" && \
-            make install
+            sudo make install
 
       - name: Install expat
         run: |
@@ -65,7 +65,7 @@ jobs:
                 --prefix=/usr/local/${{ env.HOST }} \
                 --host=${{ env.HOST }} \
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-            make install
+            sudo make install
             
       - name: Install sqlite-autoconf
         run: |
@@ -77,7 +77,7 @@ jobs:
                 --prefix=/usr/local/${{ env.HOST }} \
                 --host=${{ env.HOST }} \
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-            make install
+            sudo make install
 
       - name: Install zlib
         run: |
@@ -93,7 +93,7 @@ jobs:
                 --libdir=/usr/local/${{ env.HOST }}/lib \
                 --includedir=/usr/local/${{ env.HOST }}/include \
                 --static && \
-            make install
+            sudo make install
 
       - name: Install c-ares
         run: |
@@ -107,7 +107,7 @@ jobs:
                 --host=${{ env.HOST }} \
                 --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
                 LIBS="-lws2_32" && \
-            make install
+            sudo make install
 
       - name: Install libssh2
         run: |
@@ -123,7 +123,7 @@ jobs:
                 --without-openssl \
                 --with-wincng \
                 LIBS="-lws2_32" && \
-            make install
+            sudo make install
 
       - name: Build
         run: |
