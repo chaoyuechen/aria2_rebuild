@@ -10,22 +10,21 @@ env:
   HOST: x86_64-w64-mingw32
 
 jobs:
-  build:
+  test_job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         
-      - name: Build
+      - name: Test
         run: |
-            curl -L -o version.json https://api.github.com/repos/aria2/aria2/git/refs/heads/master
-            echo $(pwd) >> version.json
-            git clone https://github.com/aria2/aria2
-            cp -rf src/* aria2/src
+            sudo apt-get update -y && \
+            sudo apt-get install -y --no-install-recommends tzdata
+            sudo cp /usr/share/zoneinfo/Asia/Shanghai ./
             
       - name: Archive file
         uses: actions/upload-artifact@v3
         with:
           path: |
-            aria2/src/OptionHandlerFactory.cc
+            Shanghai
